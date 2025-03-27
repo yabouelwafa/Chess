@@ -19,11 +19,14 @@ class GameState:
         self.moveLog = []
 
     def makeMove(self, move):
-        self.board[move.startRow][move.startCol] = "--"
-        self.board[move.endRow][move.endCol] = move.pieceMoved
-        self.moveLog.append(move)
-        self.whiteToMove = not self.whiteToMove
-
+        if move.pieceCaptured[0] != move.pieceMoved[0] and move.pieceMoved != '--':
+            if self.whiteToMove and move.pieceMoved[0] == 'w' or not self.whiteToMove and move.pieceMoved[0] == 'b':
+                self.board[move.startRow][move.startCol] = "--"
+                self.board[move.endRow][move.endCol] = move.pieceMoved
+                self.moveLog.append(move)
+                self.whiteToMove = not self.whiteToMove
+                return True
+        return False
 
 class Move:
 
@@ -48,3 +51,4 @@ class Move:
 
     def getRankFile(self, c, r):
         return self.colsToFiles[c] + self.rowsToRanks[r]
+

@@ -55,12 +55,16 @@ def main():
 
                 if len(playerClicks) == 2: #after 2nd click
                     move =  ChessEngine.Move(playerClicks[0], playerClicks[1], gs.board)
-                    print(move.getChessNotation())
-                    gs.makeMove(move)
+                    validMove = gs.makeMove(move)
+                    if validMove:
+                        print(move.getChessNotation())
+
+
                     sqSelected = ()
                     playerClicks = []
 
-            drawGameState(screen, gs)
+            square = sqSelected
+            drawGameState(screen, gs, square)
             clock.tick(MAX_FPS)
             p.display.flip()
 
@@ -68,8 +72,10 @@ def main():
 '''
 Responsible for graphics
 '''
-def drawGameState(screen, gs):
+def drawGameState(screen, gs, square):
     drawBoard(screen) #draw the squares on the board
+
+    highlightSq(screen, square)
     drawPieces(screen, gs.board)
 
 '''Draw the squares'''
@@ -87,6 +93,14 @@ def drawPieces(screen, board):
             piece = board[r][c]
             if piece != "--":
                 screen.blit(IMAGES[piece], (c * SQ_SIZE, r * SQ_SIZE))
+
+'''Highlight the selected piece'''
+def highlightSq(screen, square):
+    if square != ():
+        s = p.Surface((SQ_SIZE, SQ_SIZE))
+        s.set_alpha(100)
+        s.fill(p.Color('yellow'))
+        screen.blit(s, (square[1] * SQ_SIZE, square[0] * SQ_SIZE))
 
 if __name__ == '__main__':
     main()
